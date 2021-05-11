@@ -1,0 +1,8 @@
+{
+  "name": "prophet",
+  "version": "0.1.0",
+  "bin": "cli.js",
+  "dependencies": {
+    "taapi": "^1.2.9"
+  }
+}

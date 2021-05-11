@@ -4,5 +4,8 @@
   "bin": "cli.js",
   "dependencies": {
     "taapi": "^1.2.9"
+  },
+  "scripts": {
+    "start": "./cli.js 35 68"
   }
 }

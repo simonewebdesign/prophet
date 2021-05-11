@@ -1,2 +1,1 @@
-worker: ./cli.js 35 68
-web:
+worker: ./cli.js 50 68

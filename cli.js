@@ -38,7 +38,7 @@ const command = value =>
   `osascript -e 'display notification "${buildMessage(value)}" with title "Prophet" sound name "Purr"'`
 
 function handleResponse ({ value }) {
-  console.log(new Date(), `${indicator.toUpperCase()} is ${parseInt(value, 10)}`)
+  // console.log(new Date(), `${indicator.toUpperCase()} is ${parseInt(value, 10)}`)
   // console.log(new Date())
 
   if (value < parseInt(rsiLowerBound, 10)) { // underbought

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+const { exec } = require('child_process')
+const platform = require('os').platform()
 const client = require('taapi').client(process.env.PROPHET_TAAPI_API_KEY)
 
 client.setTelegramCredentials(
@@ -14,35 +16,20 @@ if (!rsiLowerBound || !rsiUpperBound) {
   process.exit(1)
 }
 
-const INTERVAL_MS = 60000
+const INTERVAL_MS = 80000
 const indicator = 'rsi'
 const source = 'binance'
 const symbol = 'VET/USDT'
 const interval = '2h'
-// const preamble = value => `Hi Sir. The ${indicator.toUpperCase()} for ${symbol} is ${value.toFixed(1)}, which appears to be `
-// const privatePreamble = value => `Hi Sir. The ${indicator.toUpperCase()} for ${symbol} is ${value.toFixed(1)}, which appears to be `
-const buildMessage = value => `${indicator.toUpperCase()} ${value.toFixed(1)}. ${getSignalType(value)} signal.`
-
-const platform = require('os').platform()
 
 setInterval(() => {
   client
     .getIndicator(indicator, source, symbol, interval)
     .then(handleResponse)
-    .catch(err => {
-      console.error('[prophet]', err)
-    })
+    .catch(console.error)
 }, INTERVAL_MS)
 
-const { exec } = require('child_process')
-
-const command = value =>
-  `osascript -e 'display notification "${buildMessage(value)}" with title "Prophet" sound name "Purr"'`
-
 function handleResponse ({ value }) {
-  // console.log(new Date(), `${indicator.toUpperCase()} is ${parseInt(value, 10)}`)
-  // console.log(new Date())
-
   if (value < parseInt(rsiLowerBound, 10)) { // underbought
     if (platform === 'darwin') sendMacOSNotification(value)
     client.postTelegramMessage(buildMessage(value))
@@ -55,25 +42,25 @@ function handleResponse ({ value }) {
 }
 
 function sendMacOSNotification (value) {
-  exec(command(value), (error, stdout, stderr) => {
+  exec(macOSCommand(value), (error, stdout, stderr) => {
     if (error) {
-      console.log(`command error: ${error.message}`)
+      console.error(`command error: ${error.message}`)
       return
     }
     if (stderr) {
-      console.log(`command stderr: ${stderr}`)
+      console.error(`command stderr: ${stderr}`)
     }
   })
 }
 
 function getSignalType (value) {
-  if (value < parseInt(rsiLowerBound, 10)) { // underbought
-    return 'Buy'
-  }
-
-  if (value > parseInt(rsiUpperBound, 10)) { // overbought
-    return 'Sell'
-  }
+  return value > parseInt(rsiUpperBound, 10) ? 'Sell' : 'Buy'
 }
 
-console.log(new Date(), 'Prophet started.')
+function buildMessage (value) {
+  return `${indicator.toUpperCase()} ${value.toFixed(1)}. ${getSignalType(value)} signal.`
+}
+
+function macOSCommand (value) {
+  return `osascript -e 'display notification "${buildMessage(value)}" with title "Prophet" sound name "Purr"'`
+}

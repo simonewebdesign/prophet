@@ -23,6 +23,8 @@ const interval = '2h'
 // const privatePreamble = value => `Hi Sir. The ${indicator.toUpperCase()} for ${symbol} is ${value.toFixed(1)}, which appears to be `
 const buildMessage = value => `${indicator.toUpperCase()} ${value.toFixed(1)}. ${getSignalType(value)} signal.`
 
+const platform = require('os').platform()
+
 setInterval(() => {
   client
     .getIndicator(indicator, source, symbol, interval)
@@ -42,12 +44,12 @@ function handleResponse ({ value }) {
   // console.log(new Date())
 
   if (value < parseInt(rsiLowerBound, 10)) { // underbought
-    sendMacOSNotification(value)
+    if (platform === 'darwin') sendMacOSNotification(value)
     client.postTelegramMessage(buildMessage(value))
   }
 
   if (value > parseInt(rsiUpperBound, 10)) { // overbought
-    sendMacOSNotification(value)
+    if (platform === 'darwin') sendMacOSNotification(value)
     client.postTelegramMessage(buildMessage(value))
   }
 }

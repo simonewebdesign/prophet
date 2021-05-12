@@ -9,7 +9,8 @@ client.setTelegramCredentials(
   process.env.PROPHET_TELEGRAM_CHAT_ID
 )
 
-const [rsiLowerBound, rsiUpperBound] = process.argv.slice(2)
+const rsiLowerBound = process.env.PROPHET_RSI_LOWER_BOUND
+const rsiUpperBound = process.env.PROPHET_RSI_UPPER_BOUND
 
 if (!rsiLowerBound || !rsiUpperBound) {
   console.error('Please specify a lower and upper bound.')

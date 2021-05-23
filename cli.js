@@ -31,6 +31,7 @@ setInterval(() => {
 }, INTERVAL_MS)
 
 function handleResponse ({ value }) {
+  console.log(buildMessage(value))
   if (value < parseInt(rsiLowerBound, 10)) { // underbought
     if (platform === 'darwin') sendMacOSNotification(value)
     client.postTelegramMessage(buildMessage(value))

@@ -20,7 +20,7 @@ if (!rsiLowerBound || !rsiUpperBound) {
 const INTERVAL_MS = 80000
 const indicator = 'rsi'
 const source = 'binance'
-const symbol = 'VET/USDT'
+const symbol = process.env.PROPHET_SYMBOL // e.g. 'BTC/USDT'
 const interval = '2h'
 
 setInterval(() => {

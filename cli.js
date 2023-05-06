@@ -55,7 +55,7 @@ function getSignalType (value) {
 }
 
 function buildMessage (value) {
-  return `${indicator.toUpperCase()} ${value.toFixed(1)}. ${getSignalType(value)} signal.`
+  return `${symbol} ${indicator.toUpperCase()} ${value.toFixed(1)}. ${getSignalType(value)} signal.`
 }
 
 function macOSCommand (value) {

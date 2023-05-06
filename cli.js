@@ -9,19 +9,14 @@ client.setTelegramCredentials(
   process.env.PROPHET_TELEGRAM_CHAT_ID
 )
 
-const intervalMs = process.env.PROPHET_INTERVAL_MS
-const indicator = process.env.PROPHET_INDICATOR // e.g. 'rsi'
-const source = process.env.PROPHET_SOURCE       // e.g. 'binance'
-const symbol = process.env.PROPHET_SYMBOL       // e.g. 'ETH/USDT'
-const interval = process.env.PROPHET_INTERVAL   // e.g. '4h'
+const intervalMs = process.env.PROPHET_INTERVAL_MS || 300000 // 5 mins
+const indicator = process.env.PROPHET_INDICATOR || 'rsi'
+const source = process.env.PROPHET_SOURCE || 'binance'
+const symbol = process.env.PROPHET_SYMBOL || 'ETH/USDT'
+const interval = process.env.PROPHET_INTERVAL || '4h'
 
-const rsiLowerBound = process.env.PROPHET_RSI_LOWER_BOUND
-const rsiUpperBound = process.env.PROPHET_RSI_UPPER_BOUND
-
-if (indicator === 'rsi' && (!rsiLowerBound || !rsiUpperBound)) {
-  console.error('Please specify a RSI lower and upper bound.')
-  process.exit(1)
-}
+const rsiLowerBound = process.env.PROPHET_RSI_LOWER_BOUND || 30
+const rsiUpperBound = process.env.PROPHET_RSI_UPPER_BOUND || 70
 
 setInterval(() => {
   client
